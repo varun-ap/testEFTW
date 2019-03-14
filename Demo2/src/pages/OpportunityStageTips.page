@@ -1,0 +1,22 @@
+<apex:page docType="html-5.0" standardController="Opportunity">
+    <style>
+        .mypage .quote {
+        margin: 12px 0;
+        font-size: 64px;
+        text-align: center;
+        }
+        .mypage .delta {
+        font-size: 24px;
+        text-align: center;
+        color: green;
+        }
+    </style>
+    
+    <div class="mypage">
+        Opportunity Stage Tips:
+        <apex:outputLabel >{!Opportunity.Name}</apex:outputLabel>
+        <apex:outputLabel >{!Opportunity.StageName}</apex:outputLabel>
+        <apex:outputText value="{!IF(Opportunity.StageName=="Prospecting",'Tip1',IF(Opportunity.StageName=="Needs Analysis",'Tip2',IF(Opportunity.StageName=="Proposal/Price Quote",'Tip3',IF(Opportunity.StageName=="Negotiation/Review",'Tip4','Tip5'))))}"/>
+    </div>
+    
+</apex:page>

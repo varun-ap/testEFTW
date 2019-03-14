@@ -1,0 +1,5 @@
+<apex:page >
+    <p>
+        Hello mobile world' message
+    </p>
+</apex:page>

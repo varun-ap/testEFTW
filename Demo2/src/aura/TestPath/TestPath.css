@@ -1,0 +1,15 @@
+.THIS{
+}
+.THIS .slds-path__nav .slds-is-active {
+    background: rgb(75, 202, 129);
+}
+.THIS .slds-path__nav .slds-is-active:before, .THIS .slds-path__nav .slds-is-active:after {
+    background: rgb(75, 202, 129);
+}
+.THIS .slds-path__nav .slds-is-complete:before, .THIS .slds-path__nav .slds-is-complete:after {
+    background: rgb(243, 108, 37);
+}
+
+.THIS .slds-path__nav .slds-is-complete {
+    background: rgb(243, 108, 37);
+}

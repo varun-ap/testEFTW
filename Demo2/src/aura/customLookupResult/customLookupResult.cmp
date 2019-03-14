@@ -1,0 +1,50 @@
+<aura:component controller="CustomLookUpController"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:attribute name="oRecord" type="sObject" />
+    <aura:attribute name="IconName" type="string"/> 
+    <aura:attribute name="objectAPIName" type="string" default=""/>
+    
+    
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    <!--create a component attributs -->
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    
+    <!--Register the component level event-->
+    <aura:registerEvent name="oSelectedRecordEvent" type="c:selectedsObjectRecordEvent"/>
+    
+    <!--Register the auto populate event-->
+     <aura:registerEvent name="oSingleRecordEvent" type="c:AP_AutoPopulateEvent"/> 
+ 
+    <ltng:require styles='/resource/APBootstrapNew/bootstrap-3.3.7/dist/css/bootstrap.min.css,/resource/mystyleCss,/resource/fontAwsomeCSS'                          
+                  scripts='/resource/AP_jquery,
+                           /resource/APBootstrapNew/bootstrap-3.3.7/dist/js/bootstrap.min.js'
+                  afterScriptsLoaded="{!c.afterScriptsLoaded}" />
+    
+    <!--loading spinner start... style=Brand Medium (blue dots)-->
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    <!-- Loading spinner end-->    
+    
+    <li role="presentation" class="slds-listbox__item" onclick="{!c.selectRecord}">
+        <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+            <span class="slds-media__figure">
+                <span class="slds-icon_container" title="Description of icon when needed">
+                    <lightning:icon iconName="{!v.IconName}" class="slds-icon slds-icon_small" size="small" alternativeText="icon"/>
+                    <span class="slds-assistive-text">Description of icon</span>
+                </span>
+            </span>    
+            <span class="slds-media__body">  
+                <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!v.oRecord.Name}</span>
+            </span>
+        </span>
+    </li>
+    
+</aura:component>

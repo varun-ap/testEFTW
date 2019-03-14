@@ -1,0 +1,33 @@
+<apex:page standardStylesheets="false" sidebar="false"
+           showHeader="false" applyBodyTag="false" controller="TestVfPageController">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <apex:includeLightning />
+   <div class="row">
+       <div class="col-lg-12">
+           <div class="col-lg-9">
+               <div id="LcDisplayId"></div> 
+           </div>
+           <div class="col-lg-3">
+               
+           </div>
+       </div>
+    </div>
+    
+    <script>
+    $Lightning.use("c:TestApp", function() {
+            $Lightning.createComponent(
+                "c:RelatedLookupComponent",   
+                {},
+                "LcDisplayId",
+                function(cmp) {
+                    
+                    console.log("Component created!");
+                    console.log(cmp);
+                });
+        });
+    
+    </script>
+</apex:page>

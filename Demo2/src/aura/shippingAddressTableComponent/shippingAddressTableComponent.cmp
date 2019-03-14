@@ -1,0 +1,17 @@
+<aura:component controller="shippingAddressTable" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:attribute name="projectRecord" type="sObject" default="{}" />
+    <aura:attribute name="accountRecord" type="sObject" default="{}" />
+    <aura:attribute name="contactRecord" type="sObject" default="{}" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    
+    Hi 
+    <ui:button label="{!v.accountRecord.Id}"/>
+    <ui:button label="{!v.contactRecord.Id}"/>
+    <ui:button label="{!v.projectRecord.Id}"/>
+    
+    
+    
+    
+</aura:component>

@@ -1,0 +1,28 @@
+<Apex:page >
+
+<style>
+    .oneAlohaPage>iframe {min-height:400px !important;}
+</style>
+
+<div style="padding:50px 20px;height:300px;width:100%; font-size:1.2em">
+<h1>FormAssembly Setup Information</h1>
+
+<p>Your FormAssembly instance is currently set to: 
+
+ <strong style="color:green"> {!BLANKVALUE($Setup.FormAssemblyConfiguration__c.FormAssembly_Instance__c,"app.formassembly.com")} </strong>
+ <span style="color:#CCC">|</span>
+   <a href="{!IF(ISBLANK($Setup.FormAssemblyConfiguration__c.FormAssembly_Instance__c),URLFOR($Action.FormAssemblyConfiguration__c.New),URLFOR($Action.FormAssemblyConfiguration__c.Edit,$Setup.FormAssemblyConfiguration__c.Id))}">
+   <strong> Edit </strong>
+</a> 
+</p>
+
+
+<p style="font-size:0.8em; color:#999">Use the 'Edit' link if you have received instructions to use a different FormAssembly instance.</p>
+
+
+
+
+</div>
+
+
+</apex:page>

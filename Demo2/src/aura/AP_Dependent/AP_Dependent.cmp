@@ -1,0 +1,713 @@
+<aura:component controller="RelatedLookupController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    
+    <aura:attribute name="test_contact" type="Contact" default="{'sobjectType':'Contact', 'Id':'0057F000003pgSfQAI'}"/> 
+    <aura:attribute name="selectedLookUpAccountRecord" type="sObject" default="{'sobjectType':'Account', 'Id':'0017F00000oL5XlQAK'}"/>
+    <aura:attribute name="selectedLookUpContactRecord" type="sObject" default="{}"/>
+    <aura:attribute name="selectedLookUpProjectRecord" type="sObject" default="{}"/>
+    <aura:attribute name="objContact" type="contact" default="{'sobjectType':'contact'}"/>
+    <aura:attribute name="accountLookup" type="string" default="Account Name" />
+    <aura:attribute name="listOfShippingAddresses" type="List" description="Use,for store the list of shipping Addresses returns from apex class"/>
+    <aura:attribute name="phoneNumber" type="List" description="Use to store the phone number"/>
+    <aura:attribute name="email" type="String" description="Use to store the email"/>
+    <aura:attribute name="deviceList" type="List" description="List of all devices"/>
+    <aura:attribute name="priorityList" type="List" description="List of all priorities"/>
+    <aura:attribute name="selectedDeviceType" type="String" default="{!v.deviceList[0]}" description="Use to store selected device"/>
+    <aura:attribute name="selectedPriority" type="String" default="{!v.priorityList[0]}" description="Use to store selected device"/>
+    <aura:attribute name="shippingNote" type="String" description="Use to store shipping note entered"/>
+    
+	<aura:attribute name="editRowId" type="String" description="Id of add record to be edited" default=""/>
+    
+    <ltng:require styles='/resource/APBootstrapNew/bootstrap-3.3.7/dist/css/bootstrap.min.css,
+                          /resource/mystyleCss,/resource/fontAwsomeCSS'                          
+                  scripts='/resource/AP_jquery,
+                           /resource/APBootstrapNew/bootstrap-3.3.7/dist/js/bootstrap.min.js'
+                  afterScriptsLoaded="{!c.afterScriptsLoaded}" />
+    
+    
+    <ltng:require styles='/resource/AP_DataTable/DataTables-1.10.16/media/css/jquery.dataTables.min.css'                          
+                  scripts='/resource/AP_jquery,/resource/AP_DataTable/DataTables-1.10.16/media/js/jquery.dataTables.min.js'
+                  afterScriptsLoaded="{!c.scriptsLoaded}" />
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <div class="back-theme" style="background-color: rgb(176, 196, 223);height: -webkit-fill-available;  ">
+        <div class="row" style="  padding-top: 12px;">
+            <div class="col-md-12 ">           
+                <div class="panel panel-default wow zoomIn" style="margin-bottom: 0px;">
+                    <div class="panel-body">
+                        
+                        <div class="slds-grid slds-col slds-has-flexi-truncate slds-media--center" data-aura-rendered-by="609:0">
+                            <div class="profilePicWrapper slds-media slds-no-space" data-aura-rendered-by="610:0" 
+                                 style="transform: scale3d(1, 1, 1) translate3d(0px, 0px, 0px);">
+                                <div class="slds-media__figure slds-icon forceEntityIcon" style="background-color: #c8ca58" 
+                                     data-aura-rendered-by="614:0" data-aura-class="forceEntityIcon">
+                                    <span data-aura-rendered-by="617:0" class="uiImage" data-aura-class="uiImage">
+                                        <img data-aura-rendered-by="615:0" 
+                                             src="https://fb--Oculus.cs77.my.salesforce.com/img/icon/t4v35/custom/custom44_120.png" class="icon "
+                                             alt="Hardware Request" title="Hardware Request" />
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="slds-media__body" data-aura-rendered-by="618:0">                                  
+                                
+                                <h2 style="color: black;font-size: 20px;font-weight: 600;">New Hardware Request </h2>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Accordion div -->
+            <div class=" col-lg-9 " id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="panel-group" style="max-height:525px;overflow-y:auto;margin-right: -2.25em;">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                                <a role="button" style="text-decoration:none" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Whom to ship? 
+                        </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne" style="border: 1px solid #f3f2f0 ; border-radius: 0em; margin-top: 7px;">
+                            <div class="panel-body">
+                                <!-- Whom to ship start-->
+                                
+                                <div class="container col-lg-12" >
+                                    <table class="table-striped" style="font-family:Salesforce Sans,Arial,sans-serif;width: 100%;">
+                                        <tbody style="vertical-align: middle;">
+                                            <tr>
+                                                
+                                                <td style="width: 6%;white-space:nowrap;">
+                                                    <h1 style="color:#3c3d3e; font-size: 14px;"><span style="color:red" title="required">* </span>Receiving Account </h1></td>
+                                                <td style="padding-top: 1%;padding-bottom: 1%;"><c:customLookup objectAPIName="account" IconName="standard:account" label="" 
+                                                                                                                   selectedRecord="{!v.selectedLookUpAccountRecord}" 
+                                                                                                                	
+                                                                                                                   projectRecord="{!v.selectedLookUpProjectRecord}" contactRecord="{!v.selectedLookUpContactRecord}" accountRecord="{!v.selectedLookUpAccountRecord}" /> </td>
+                                                
+                                                
+                                                
+                                            </tr>
+                                            <tr>                                                        
+                                                <td><h1 style="color:#3c3d3e; font-size: 14px;"><span style="color:red" title="required">* </span>Receiving Party </h1></td>
+                                                <td style="padding-top: 1%;padding-bottom: 1%;"> <c:customLookup objectAPIName="contact" IconName="standard:contact" label=""
+                                                                                                                    selectedRecord="{!v.selectedLookUpContactRecord}"  
+                                                                                                                    projectRecord="{!v.selectedLookUpProjectRecord}" contactRecord="{!v.selectedLookUpContactRecord}" accountRecord="{!v.selectedLookUpAccountRecord}"/>
+                                                </td>
+                                                
+                                                
+                                                
+                                            </tr>
+                                            <tr>
+                                                <td><h1 style="color:#3c3d3e; font-size: 14px;"><span style="color:red" title="required">* </span>Project : </h1></td>
+                                                <td style="padding-top: 1%;padding-bottom: 1%;"><c:customLookup objectAPIName="Project__c" IconName="standard:contact" label=""
+                                                                                                                   selectedRecord="{!v.selectedLookUpProjectRecord}" 
+                                                                                                                   projectRecord="{!v.selectedLookUpProjectRecord}" contactRecord="{!v.selectedLookUpContactRecord}" accountRecord="{!v.selectedLookUpAccountRecord}"/>
+                                                </td>
+                                                
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                    
+                                </div>
+                                
+                                <!-- Whom to ship end-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingTwo">
+                            <h4 class="panel-title">
+                                
+                                <!--  <aura:if isTrue="{!and(v.selectedLookUpAccountRecord.Id != undefined, v.selectedLookUpContactRecord.Id != undefined, v.selectedLookUpProjectRecord.Id != undefined)}">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" onclick="{!c.sectionTwo}"  href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Where to ship?
+                            </a>
+                            <aura:set attribute="else">
+                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapseTwo">
+                                Where to ship?
+                                </a>
+                            </aura:set> 
+                        </aura:if>     -->    
+                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" onclick="{!c.sectionTwo}"  href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Where to ship?
+                                </a>
+                                
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" 
+                             style="border: 1px solid #f3f2f0 ; border-radius: 0em; margin-top: 7px;">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12" style="padding-left: 4em;padding-right: 4em;">
+                                        <div style="font-family:Salesforce Sans,Arial,sans-serif">
+                                            <h1 style="color:#3c3d3e; font-size: 20px; margin-bottom: 15px;">Choose a shipping address</h1>
+                                            
+                                            <!-- Render Shipping Address Table -->
+                                            <aura:if isTrue="{!and(v.selectedLookUpAccountRecord.Id != undefined, v.selectedLookUpContactRecord.Id != undefined, v.selectedLookUpProjectRecord.Id != undefined)}">
+                                                <div id="Datatable" style="padding-bottom: 2%;padding-top: 2%;">    
+                                                    <table id="wheretOShip" class="table table-striped whereTOShip">
+                                                        <thead style="background: #f3f2f2;color: black;" >
+                                                            <tr>
+                                                                <th>Select </th>
+                                                                <th>Name </th>
+                                                                <th>Address </th>
+                                                                <th>Type </th>
+                                                                <th>Edit </th>
+                                                                
+                                                            </tr>
+                                                        </thead>
+                                                        
+                                                        <tbody >
+                                                            
+                                                            <aura:iteration items="{!v.listOfShippingAddresses}" var="row">                                                                
+                                                                <tr>
+                                                                    <td ><input type="radio" onclick="{!c.setSelectedAddress}" change="{!setSelectedAddress}" id="{!row.Id}"/> &nbsp;</td>
+                                                                    <td> {!row.OC_Address__c }</td>
+                                                                    <td> {!row.Address_Line_1__c} {!row.Address_Line_2__c}, {!row.City__c} , {!row.State__c} , 
+                                                                        {!row.Country__c}, {!row.Postal_Code__c}.
+                                                                    </td>
+                                                                    <td>{!row.Type__c}</td>
+                                                                    <td> <button type="button" class="btn btn-default" onclick="{!c.editContactAddress}" aura:id="{!row.Name}" id="{!row.Id}"
+                                                                                  style="color: #3ea6e6!important;background-color: white!important;border-color: #3ba5e8!important;font-size: smaller;">
+                                                                        Edit {!row.Id}</button> 
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>                                 
+                                                                    <div class="{!row.Id}" style="display:none;">
+                                                                        <table style="width: 50%;height: 13em;margin-bottom: 1em;">
+                                                                            <!-- Row 1 -->
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <div class="slds-form-element">
+                                                                                        <label class="slds-form-element__label" for="text-input-id-1">
+                                                                                            <span style="color:red" title="required">* </span>Address Name</label>
+                                                                                        <div class="slds-form-element__control">
+                                                                                            <input id="text-input-id-1" required="" class="slds-input" type="text" value="{!row.Name}" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                                &nbsp;&nbsp;
+                                                                                <td>
+                                                                                    
+                                                                                </td>
+                                                                            </tr>
+                                                                            <!-- Row 2 -->
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <div class="slds-form-element">
+                                                                                        <label class="slds-form-element__label" for="text-input-id-1">Address Line 1</label>
+                                                                                        <div class="slds-form-element__control">
+                                                                                            <input id="text-input-id-1" class="slds-input" type="text" value="{!row.Address_Line_1__c}" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div class="slds-form-element">
+                                                                                        <label class="slds-form-element__label" for="text-input-id-1">Address Line 2</label>
+                                                                                        <div class="slds-form-element__control">
+                                                                                            <input id="text-input-id-1" class="slds-input" type="text" value="{!row.Address_Line_2__c}" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                            
+                                                                            <!-- Row 3 -->
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <div class="slds-form-element">
+                                                                                        <label class="slds-form-element__label" for="text-input-id-1">City</label>
+                                                                                        <div class="slds-form-element__control">
+                                                                                            <input id="text-input-id-1" class="slds-input" type="text" value="{!row.City__c}" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div class="slds-form-element">
+                                                                                        <label class="slds-form-element__label" for="text-input-id-1">State</label>
+                                                                                        <div class="slds-form-element__control">
+                                                                                            <input id="text-input-id-1" class="slds-input" type="text" value="{!row.State__c}" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                            
+                                                                            <!-- Row 4 -->
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <div class="slds-form-element">
+                                                                                        <label class="slds-form-element__label" for="text-input-id-1">Country</label>
+                                                                                        <div class="slds-form-element__control">
+                                                                                            <input id="text-input-id-1" class="slds-input" type="text" value="{!row.Country__c}" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div class="slds-form-element">
+                                                                                        <label class="slds-form-element__label" for="text-input-id-1">Postal Code</label>
+                                                                                        <div class="slds-form-element__control">
+                                                                                            <input id="text-input-id-1" class="slds-input" type="text" value="{!row.Postal_Code__c}" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                            
+                                                                        </table>
+                                                                        <button type="button" class="btn btn-primary">Add</button>
+                                                                        <form action="">
+                                                                            <div class="form-group">
+                                                                                <label for="email">Email address:</label>
+                                                                                <input type="email" class="form-control" id="email" />
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="pwd">Password:</label>
+                                                                                    <input type="password" class="form-control" id="pwd" />
+                                                                                    </div>
+                                                                                    <div class="checkbox">
+                                                                                        <label><input type="checkbox"/> Remember me</label>
+                                                                                        </div>
+                                                                                        <button type="submit" class="btn btn-default">Submit</button>
+                                                                                    </form>
+                                                                    </div>
+                                                                	
+                                                                </tr>
+                                                                
+                                                           
+                                                            </aura:iteration>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <button  class="btn btn-primary" onclick="{!c.addNewAddress}"><i class="glyphicon glyphicon-plus" aria-hidden="true"></i> Add a new address</button>
+                                                <div id="newAddressDiv" style="display:none;">
+                                                    <table style="
+                                                                  width: 50%;
+                                                                  height: 13em;
+                                                                  margin-bottom: 1em;
+                                                                  ">
+                                                        <!-- Row 1 -->
+                                                        <tr>
+                                                            <td>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="text-input-id-1">
+                                                                        <span style="color:red" title="required">* </span>Address Name</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <input id="text-input-id-1" required="" class="slds-input" type="text" value="" />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            &nbsp;&nbsp;
+                                                            <td>
+                                                                
+                                                            </td>
+                                                        </tr>
+                                                        <!-- Row 2 -->
+                                                        <tr>
+                                                            <td>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="text-input-id-1">Address Line 1</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <input id="text-input-id-1" class="slds-input" type="text" value="" />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="text-input-id-1">Address Line 2</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <input id="text-input-id-1" class="slds-input" type="text" value="" />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <!-- Row 3 -->
+                                                        <tr>
+                                                            <td>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="text-input-id-1">City</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <input id="text-input-id-1" class="slds-input" type="text" value="" />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="text-input-id-1">State</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <input id="text-input-id-1" class="slds-input" type="text" value="" />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <!-- Row 4 -->
+                                                        <tr>
+                                                            <td>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="text-input-id-1">Country</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <input id="text-input-id-1" class="slds-input" type="text" value="" />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="text-input-id-1">Postal Code</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <input id="text-input-id-1" class="slds-input" type="text" value="" />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                    </table>
+                                                    <button type="button" class="btn btn-primary">Add</button>
+                                                    
+                                                </div>
+                                                
+                                               <div id="editContactAddress" style="display:none;" >
+                                                    <table style="
+                                                                  width: 50%;
+                                                                  height: 13em;
+                                                                  margin-bottom: 1em;
+                                                                  margin-top: -24px;
+                                                                  ">
+                                                       
+                                                        <tr>
+                                                            <td>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="text-input-id-1">Address Line 1</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <input id="text-input-id-1" class="slds-input" type="text" value="3826 Single Street" />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="text-input-id-1">Address Line 2</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <input id="text-input-id-1" class="slds-input" type="text" value="" />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        
+                                                        <tr>
+                                                            <td>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="text-input-id-1">City</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <input id="text-input-id-1" class="slds-input" type="text" value="PERU" />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="text-input-id-1">State</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <input id="text-input-id-1" class="slds-input" type="text" value="VT" />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                       
+                                                        <tr>
+                                                            <td>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="text-input-id-1">Country</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <input id="text-input-id-1" class="slds-input" type="text" value="US" />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="text-input-id-1">Postal Code</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <input id="text-input-id-1" class="slds-input" type="text" value="05152" />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <button type="button" class="btn btn-primary">Update</button>
+                                                    
+                                                </div>
+                                             
+                                                <aura:set attribute="else">
+                                                    <!-- <aura:if isTrue="{!(v.selectedLookUpAccountRecord.Id != undefined) } ">
+                                           {!v.strAccount}='Receiving Account';
+                                         </aura:if>
+                                        <aura:if isTrue="{!(v.selectedLookUpContactRecord.Id != undefined) } ">
+                                           {!v.strContact}='Receiving Party';
+                                         </aura:if>
+                                            <aura:if isTrue="{!(v.selectedLookUpProjectRecord.Id != undefined) } ">
+                                           {!v.strProject}='Project';
+                                         </aura:if>
+                                            {! 'Please Select' + v.strAccount + v.strContact + v.strProject + 'first to select a Shipping Address.'}
+-->
+                                                    <p style="color:red">Please fill out all the required fields first inorder to choose a shipping address. </p>                                            
+                                                </aura:set>
+                                            </aura:if>
+                                            
+                                        </div>
+                                        
+                                        <div  style="font-family:Salesforce Sans,Arial,sans-serif">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <h1 style="color:#3c3d3e; font-size: 14px;">Email</h1>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                                                        <input id="email" type="text" class="form-control" value="{!v.email}" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <h1 style="color:#3c3d3e; font-size: 14px;">Phone</h1>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                                                        <input id="email" type="text" class="form-control" value="{!v.phoneNumber[2]}" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="container col-lg-12" style="font-family:Salesforce Sans,Arial,sans-serif;">
+                                                <h1 style="color:#3c3d3e; font-size: 14px;">Shipping Notes</h1>
+                                                <div class="form-group">
+                                                    <lightning:textarea name="shippingNote" aura:id="shippingNoteId" label="" onblur="{! c.setShippingNote}"/>    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingThree" >
+                            <h4 class="panel-title">
+                                 <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" onclick="{!c.sectionThree}" aria-expanded="false" aria-controls="collapseThree">
+                            What to ship? 
+                        </a>
+                            </h4>
+                        </div>
+                        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" style="border: 1px solid #f3f2f0 ; border-radius: 0em; margin-top: 7px;">
+                            <div class="panel-body">
+                                <!-- What to ship? start-->
+                                <div class="container col-lg-12" >
+                                    
+                                    
+                                    <table class="table-striped" style="font-family:Salesforce Sans,Arial,sans-serif;width: 100%;">
+                                        <tbody style="vertical-align: middle;">
+                                            <tr style="height:3em;">
+                                                <td style="width: 20%;white-space:nowrap;">
+                                                    <h1 style="color:#3c3d3e; font-size: 14px; font-weight: 500;">Device :</h1></td>
+                                                <td> 
+                                                    <lightning:select aura:id="selectDevice" name="deviceSelected"  label="" onchange="{!c.setSelectedDeviceType}">
+                                                        <aura:iteration items="{!v.deviceList}" var="row">
+                                                            <option value="{!row}">{!row}</option>                                                
+                                                        </aura:iteration>
+                                                    </lightning:select>
+                                                    
+                                                </td>
+                                                
+                                                
+                                                
+                                            </tr>
+                                            <tr style="height:3em;">                                                        
+                                                <td><h1 style="color:#3c3d3e; font-size: 14px; font-weight: 500;">Priority : </h1></td>
+                                                <td>
+                                                    <lightning:select aura:id="selectPriority" name="prioritySelected" label="" onchange="{!c.setSelectedPriority}">
+                                                        <aura:iteration items="{!v.priorityList}" var="row">
+                                                            <option value="{!row}">{!row}</option>                                                
+                                                        </aura:iteration>
+                                                    </lightning:select>
+                                                </td>
+                                                
+                                                
+                                                
+                                            </tr>
+                                            <tr>
+                                                <td><h1 style="color:#3c3d3e; font-size: 14px; font-weight: 500;">Quantity :</h1></td>
+                                                <td>
+                                                    
+                                                    <div class="input-group number-spinner" style="
+                                                                                                   padding-top: 1%;width: 30%;"
+                                                         >
+                                                        <span class="input-group-btn data-dwn">
+                                                            <button class="btn btn-default btn-info" style="height:34px;background: #005c8a;" data-dir="dwn"><span class="glyphicon glyphicon-minus" style="color: white;" ></span></button>
+                                                        </span>
+                                                        <input type="text" class="form-control text-center" value="1" min="1" max="9999"/>
+                                                        <span class="input-group-btn data-up">
+                                                            <button class="btn btn-default btn-info" style="height:34px;background: #005c8a;" data-dir="up"><span class="glyphicon glyphicon-plus" style="color: white;"></span></button>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                </div>
+                                
+                                <!-- What to ship end-->
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div style="align-items: right;align-content: right;margin-left: 40%;width: 24%;padding: 10px; margin-top: 7.5em;">
+                        <button type="button" class="btn btn-default" style="    color: #3ea6e6!important;background-color: white!important;
+                                                                             border-color: #3ba5e8!important;" >Save </button>
+                        
+                        <button type="button" class="btn btn-default" style="    color: #3ea6e6!important;background-color: white!important;
+                                                                             border-color: #3ba5e8!important;">Submit</button>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Preview Div -->
+            <div class="col-lg-3 ">
+                <div clas="panel-group" >
+                    <div class="panel panel-default" >
+                        <div class="panel-heading" style="font-size: 16px;
+                                                          font-weight: 600;
+                                                          background:linear-gradient(to right, #2980B9 33%, #6DD5FA 66%,  #f3f2f0 100%);
+                                                          color: white;height: 2.3em;">
+                            <span>Hardware Request Summary </span>
+                        </div>
+                        <div class="panel-body">
+                            <table id="tableHRS" class="table-striped" style="height: 36em;color:black;">
+                                <tbody style="vertical-align: middle;">
+                                    <tr>
+                                        <th style="width: 60%;    vertical-align: middle;">
+                                            Receiving Account :
+                                        </th>
+                                        <td style="width: 100%;"> 
+                                            <aura:if isTrue="{!and(v.selectedLookUpAccountRecord.Id != undefined)}">                                            
+                                                {!v.selectedLookUpAccountRecord.Name} 
+                                                <aura:set attribute="else">
+                                                    -
+                                                </aura:set>
+                                            </aura:if>
+                                            
+                                        </td> 
+                                        <td>
+                                            <aura:if isTrue="{!and(v.selectedLookUpAccountRecord.Id != undefined)}">                                            
+                                                <!--<button data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="btn-sm">Change</button>                                   
+                                            --></aura:if>
+                                        </td>  
+                                    </tr>
+                                    <tr>
+                                        <th>Receiving Party :</th>
+                                        
+                                        <td>
+                                            <aura:if isTrue="{!and(v.selectedLookUpContactRecord.Id != undefined)}">                                            
+                                                {!v.selectedLookUpContactRecord.Name} 
+                                                <aura:set attribute="else">
+                                                    -
+                                                </aura:set>
+                                            </aura:if>
+                                        </td>
+                                        <td>
+                                            <aura:if isTrue="{!and(v.selectedLookUpContactRecord.Id != undefined)}">                                            
+                                                <!--<button data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="btn-sm">Change</button>                                   
+                                            --></aura:if>
+                                        </td> 
+                                    </tr>
+                                    <tr>
+                                        
+                                        <th>Project :</th>
+                                        <td>
+                                            <aura:if isTrue="{!and(v.selectedLookUpProjectRecord.Id != undefined)}">                                            
+                                                {!v.selectedLookUpProjectRecord.Name} 
+                                                <aura:set attribute="else">
+                                                    -
+                                                </aura:set>
+                                            </aura:if>
+                                        </td> 
+                                        <td>
+                                            <aura:if isTrue="{!and(v.selectedLookUpProjectRecord.Id != undefined)}">                                            
+                                                <!--  <button data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="btn-sm">Change</button>                                   
+                                            --></aura:if>
+                                        </td> 
+                                    </tr>
+                                    <tr><th>Shipping Address :</th>
+                                        <td>-</td> 
+                                        <td style="width:100%;">&nbsp;</td></tr>
+                                    <tr>
+                                        <th>Shipping Notes :</th>
+                                        <td>
+                                            <aura:if isTrue="{!not(empty(v.shippingNote))}">                                            
+                                                {!v.shippingNote} 
+                                                <aura:set attribute="else">
+                                                    -
+                                                </aura:set>
+                                            </aura:if>
+                                        </td>
+                                        <td>
+                                            <aura:if isTrue="{!not(empty(v.shippingNote))}">                                            
+                                                <!--  <button data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" class="btn-sm">Change</button>                                   
+                                            --></aura:if> 
+                                        </td> 
+                                    </tr>
+                                    <tr>
+                                        <th>Device: </th>
+                                        <td>
+                                            <aura:if isTrue="{!not(empty(v.deviceList))}">                                            
+                                                {!v.selectedDeviceType} 
+                                                <aura:set attribute="else">
+                                                    -
+                                                </aura:set>
+                                            </aura:if>
+                                        </td>
+                                        <td>
+                                            <aura:if isTrue="{!not(empty(v.deviceList))}">                                            
+                                                <!--  <button data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="btn-sm">Change</button>                                   
+                                          -->  </aura:if> 
+                                        </td> 
+                                    </tr>
+                                    <tr><th>Quantity :</th>
+                                        <td>-</td> 
+                                        <td style="width:100%;">&nbsp;</td></tr>
+                                    <tr>
+                                        <th>Priority :</th>
+                                        <td>
+                                            <aura:if isTrue="{!not(empty(v.priorityList))}">                                            
+                                                {!v.selectedPriority} 
+                                                <aura:set attribute="else">
+                                                    -
+                                                </aura:set>
+                                            </aura:if>
+                                        </td>
+                                        <td>
+                                            <aura:if isTrue="{!not(empty(v.deviceList))}">                                            
+                                                <!--<button data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="btn-sm">Change</button>                                   
+                                            --></aura:if> 
+                                        </td>
+                                    </tr>                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>    
+            </div>
+            
+        </div>
+    </div>
+    
+    
+    
+    
+</aura:component>
